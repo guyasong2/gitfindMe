@@ -36,9 +36,15 @@ export default function SearchUser() {
         `https://api.github.com/users/${username}`
       );
       setUser(res.data);
-    } catch (err: any) {
-      if (!err.response && err.response.status === 404) {
-        setError("An error ocurred while fetching user");
+    } catch (err: unknown) {
+      if(axios.isAxiosError(err)) {
+        if (err.response && err.response.status === 404) {
+            setError("User not Found");
+        } else {
+            setError("An error occured while fetching user")
+        }
+      } else {
+        setError("An unexpected error occured")
       }
     }
   };
